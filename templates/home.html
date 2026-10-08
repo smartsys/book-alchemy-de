@@ -11,6 +11,15 @@
     <br/>
     <a href="{{ url_for('add_book') }}">Add Book</a>
 
+    <form action="{{ url_for('home') }}" method="GET">
+      <label for="sort">Sort by:</label>
+      <select id="sort" name="sort">
+        <option value="title" {% if sort == 'title' %}selected{% endif %}>Title</option>
+        <option value="author" {% if sort == 'author' %}selected{% endif %}>Author</option>
+      </select>
+      <input type="submit" value="Sort">
+    </form>
+
     {% for book in books %}
     <div>
       <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover of {{ book.title }}">

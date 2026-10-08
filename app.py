@@ -13,8 +13,17 @@ db.init_app(app)
 
 @app.route('/')
 def home():
-    books = db.session.execute(db.select(Book)).scalars().all()
-    return render_template('home.html', books=books)
+    sort = request.args.get('sort')
+    query = db.select(Book)
+
+    if sort == 'title':
+        query = query.order_by(Book.title)
+    elif sort == 'author':
+        query = query.join(Book.author).order_by(Author.name)
+
+    books = db.session.execute(query).scalars().all()
+
+    return render_template('home.html', books=books, sort=sort)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
@@ -50,13 +59,10 @@ def add_book():
     authors = db.session.execute(db.select(Author).order_by(Author.name)).scalars().all()
     return render_template('add_book.html', authors=authors, message=message)
 
+
 with app.app_context():
     # db.create_all()
     pass
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
