@@ -14,7 +14,11 @@ db.init_app(app)
 @app.route('/')
 def home():
     sort = request.args.get('sort')
+    search = request.args.get('search')
     query = db.select(Book)
+
+    if search:
+        query = query.where(Book.title.like(f"%{search}%"))
 
     if sort == 'title':
         query = query.order_by(Book.title)
@@ -23,7 +27,14 @@ def home():
 
     books = db.session.execute(query).scalars().all()
 
-    return render_template('home.html', books=books, sort=sort)
+    message = None
+    if search and not books:
+        message = "No books match your search criteria."
+    elif search:
+        message = "Results for Search: "+ search
+
+
+    return render_template('home.html', books=books, sort=sort, search=search, message=message)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
