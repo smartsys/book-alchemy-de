@@ -4,33 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Book - Book Alchemy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
 
-  <a href="{{ url_for('home') }}">Back to Home</a>
+  <header>
+    <div class="inner">
+      <a class="brand" href="{{ url_for('home') }}">Book Alchemy</a>
+      <nav>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="card">
 
   {% if message %}
-  <p>{{ message }}</p>
+  <p class="message">{{ message }}</p>
   {% endif %}
 
   <form action="/add_book" method="POST">
   <label for="isbn">ISBN:</label>
-  <input type="text" id="isbn" name="isbn" required><br><br>
+  <input type="text" id="isbn" name="isbn" required>
 
   <label for="title">Title:</label>
-  <input type="text" id="title" name="title" required><br><br>
+  <input type="text" id="title" name="title" required>
 
   <label for="publication_year">Publication Year:</label>
-  <input type="number" id="publication_year" name="publication_year"><br><br>
+  <input type="number" id="publication_year" name="publication_year">
 
   <label for="author_id">Author:</label>
   <select id="author_id" name="author_id" required>
     {% for author in authors %}
     <option value="{{ author.id }}">{{ author.name }}</option>
     {% endfor %}
-  </select><br><br>
+  </select>
+
   <input type="submit" value="Add Book">
   </form>
+
+  </main>
 
   </body>
 </html>

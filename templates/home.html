@@ -4,53 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Alchemy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
 
-    <a href="{{ url_for('add_author') }}">Add Author</a>
-    <br/>
-    <a href="{{ url_for('add_book') }}">Add Book</a>
+    <header>
+      <div class="inner">
+        <a class="brand" href="{{ url_for('home') }}">Book Alchemy</a>
+        <nav>
+          <a href="{{ url_for('add_author') }}">Add Author</a>
+          <a href="{{ url_for('add_book') }}">Add Book</a>
+        </nav>
+      </div>
+    </header>
 
-    <form action="{{ url_for('home') }}" method="GET">
-      <label for="sort">Sort by:</label>
-      <select id="sort" name="sort">
-        <option value="title" {% if sort == 'title' %}selected{% endif %}>Title</option>
-        <option value="author" {% if sort == 'author' %}selected{% endif %}>Author</option>
-      </select>
-      <input type="submit" value="Sort">
-    </form>
+    <main class="inner">
 
-    <form action="{{ url_for('home') }}" method="GET">
-      <input type="text" name="search" value="{{ search or '' }}">
-      <input type="submit" value="Search">
-    </form>
+      <div class="toolbar">
+        <form action="{{ url_for('home') }}" method="GET">
+          <label for="sort">Sort by:</label>
+          <select id="sort" name="sort">
+            <option value="title" {% if sort == 'title' %}selected{% endif %}>Title</option>
+            <option value="author" {% if sort == 'author' %}selected{% endif %}>Author</option>
+          </select>
+          <input type="submit" value="Sort">
+        </form>
 
-    {% if message %}
-    <br>
-    <p><strong>{{ message }}</strong></p>
-    <br>
-    {% endif %}
+        <form action="{{ url_for('home') }}" method="GET">
+          <input type="text" name="search" value="{{ search or '' }}">
+          <input type="submit" value="Search">
+        </form>
+      </div>
 
-    {% for flash_message in get_flashed_messages() %}
-    <p><strong>{{ flash_message }}</strong></p>
-    {% endfor %}
+      {% if message %}
+      <p class="message"><strong>{{ message }}</strong></p>
+      {% endif %}
 
-    {% for book in books %}
-     <br>
-    <br>
-    <div>
+      {% for flash_message in get_flashed_messages() %}
+      <p class="message"><strong>{{ flash_message }}</strong></p>
+      {% endfor %}
 
-      <h3>{{ book.title }}</h3>
-      <p>{{ book.author.name }}</p>
+      <div class="books">
+        {% for book in books %}
+        <div class="book">
+          <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover of {{ book.title }}">
+          <h3>{{ book.title }}</h3>
+          <p>{{ book.author.name }}</p>
 
-      <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
-        <input type="submit" value="Buch löschen">
-      </form>
+          <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
+            <input type="submit" value="Buch löschen">
+          </form>
+        </div>
+        {% endfor %}
+      </div>
 
-        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover of {{ book.title }}">
-    </div>
-
-    {% endfor %}
+    </main>
 
   </body>
 </html>

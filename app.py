@@ -14,6 +14,7 @@ db.init_app(app)
 
 @app.route('/')
 def home():
+    """Show all books, optionally filtered by search term and sorted."""
     sort = request.args.get('sort')
     search = request.args.get('search')
     query = db.select(Book)
@@ -40,6 +41,7 @@ def home():
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
+    """Show the author form and add a new author on POST."""
     message = None
     if request.method == 'POST':
         date_of_death = request.form.get('date_of_death')
@@ -56,6 +58,7 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
+    """Show the book form and add a new book on POST."""
     message = None
     if request.method == 'POST':
         publication_year = request.form.get('publication_year')
@@ -74,6 +77,7 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 def delete_book(book_id):
+    """Delete a book by id and redirect to the home page."""
     book = db.get_or_404(Book, book_id)
     db.session.delete(book)
     db.session.commit()

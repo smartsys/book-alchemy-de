@@ -4,6 +4,7 @@ db = SQLAlchemy()
 
 
 class Author(db.Model):
+    """An author in the library."""
     __tablename__ = 'authors'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -19,6 +20,7 @@ class Author(db.Model):
 
 
 class Book(db.Model):
+    """A book in the library, linked to its author."""
     __tablename__ = 'books'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
