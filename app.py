@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from data_models import db, Author, Book
 from datetime import date
@@ -7,6 +7,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data/library.sqlite')}"
 db.init_app(app)
 
@@ -69,6 +70,15 @@ def add_book():
         message = f"Book {book.title} was added successfully."
     authors = db.session.execute(db.select(Author).order_by(Author.name)).scalars().all()
     return render_template('add_book.html', authors=authors, message=message)
+
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    book = db.get_or_404(Book, book_id)
+    db.session.delete(book)
+    db.session.commit()
+    flash(f"Book {book.title} was deleted successfully.")
+    return redirect(url_for('home'))
 
 
 with app.app_context():
