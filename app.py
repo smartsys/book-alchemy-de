@@ -11,6 +11,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data
 db.init_app(app)
 
 
+@app.route('/')
+def home():
+    books = db.session.execute(db.select(Book)).scalars().all()
+    return render_template('home.html', books=books)
+
+
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
     message = None
@@ -41,7 +47,7 @@ def add_book():
         db.session.add(book)
         db.session.commit()
         message = f"Book {book.title} was added successfully."
-    authors = Author.query.order_by(Author.name).all()
+    authors = db.session.execute(db.select(Author).order_by(Author.name)).scalars().all()
     return render_template('add_book.html', authors=authors, message=message)
 
 with app.app_context():

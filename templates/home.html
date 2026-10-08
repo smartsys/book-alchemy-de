@@ -7,8 +7,15 @@
   </head>
   <body>
 
+    <a href="{{ url_for('add_author') }}">Add Author</a>
+    <br/>
+    <a href="{{ url_for('add_book') }}">Add Book</a>
+
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
+    <div>
+      <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover of {{ book.title }}">
+      <h3>{{ book.title }}</h3>
+      <p>{{ book.author.name }}</p>
     </div>
     {% endfor %}
 
